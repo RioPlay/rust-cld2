@@ -82,6 +82,21 @@ pub fn detect_language(text: &str, format: Format) -> (Option<Lang>, Reliability
 /// assert_eq!(Some(Lang("fr")), detected.language);
 /// ```
 pub fn detect_language_ext(text: &str, format: Format, hints: &Hints) -> DetectionResult {
+    detect_language_with_effort(text, format, hints, Effort::Standard)
+}
+
+/// Like [`detect_language_ext`], with control over whether cld2 may return
+/// its best guess on text it would otherwise leave as `None`.
+pub fn detect_language_with_effort(
+    text: &str,
+    format: Format,
+    hints: &Hints,
+    effort: Effort,
+) -> DetectionResult {
+    let flags = match effort {
+        Effort::Standard => 0,
+        Effort::BestEffort => ffi::kCLDFlagBestEffort,
+    };
     let mut language3 = [
         LanguageId::UNKNOWN_LANGUAGE,
         LanguageId::UNKNOWN_LANGUAGE,
@@ -99,7 +114,7 @@ pub fn detect_language_ext(text: &str, format: Format, hints: &Hints) -> Detecti
                 text.len() as c_int,
                 format == Format::Text,
                 hints_ptr,
-                0,
+                flags,
                 language3.as_mut_ptr(),
                 percent3.as_mut_ptr(),
                 normalized_score3.as_mut_ptr(),
