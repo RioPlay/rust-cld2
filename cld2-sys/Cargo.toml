@@ -67,6 +67,5 @@ maintenance = { status = "deprecated" }
 libc = "0.2.2"
 
 [build-dependencies]
-toml = "0.1.23"
-regex = "0.1.41"
+toml = { version = "0.9", default-features = false, features = ["parse", "serde", "std"] }
 cc = "1.2.40"
