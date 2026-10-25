@@ -60,7 +60,7 @@ Eftsoons his hand dropt he.
 // This particular API has extra wrapper code, so we want to test it.
 #[test]
 fn test_result_chunks() {
-    use libc::{c_double, c_int};
+    use libc::{c_char, c_double, c_int};
     use std::iter::repeat;
     use std::slice::from_raw_parts;
 
